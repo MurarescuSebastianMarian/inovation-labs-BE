@@ -63,6 +63,9 @@ exports.users_singup = async (req, res, next) => {
       facultate,
       specializare,
       email,
+      role,
+      quizDone,
+      quizResult,
     } = req.body;
 
     // Verificăm dacă utilizatorul există deja în baza de date după adresa de email
@@ -83,6 +86,9 @@ exports.users_singup = async (req, res, next) => {
       facultate,
       specializare,
       email,
+      role,
+      quizDone,
+      quizResult,
     });
 
     // Salvăm noul utilizator în baza de date

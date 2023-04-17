@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const usersRoutes = require("./api/routes/users");
 const groupsRoutes = require("./api/routes/groups");
+const mentorsRoutes = require("./api/routes/mentors");
 
 const DB =
   "mongodb+srv://murarescusebastian:8gemfTU4imdT3vHy@cluster0.bb2u8mx.mongodb.net/?retryWrites=true&w=majority";
@@ -31,6 +32,7 @@ app.use(cors());
 
 app.use("/users", usersRoutes);
 app.use("/groups", groupsRoutes);
+app.use("/mentors", mentorsRoutes);
 
 app.use((req, res, next) => {
   const error = new Error("Not Found");
