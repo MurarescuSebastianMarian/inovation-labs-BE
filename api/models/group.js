@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("./user"); // Importăm modelul User
 
 // Definirea schemăi pentru modelul "Group"
 const groupSchema = new mongoose.Schema({

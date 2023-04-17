@@ -1,54 +1,43 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
+// const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Group = require("../models/group");
 
-/** Login User */
-exports.users_login = (req, res, next) => {
-  User.find({ email: req.body.email })
-    .exec()
-    .then((user) => {
-      if (user.length < 1) {
-        return res.status(401).json({
-          message: "Auth failed 1",
-        });
-      }
-      bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-        if (err) {
-          return res.status(401).json({
-            message: "Auth failed 2",
-          });
-        }
-        if (result) {
-          const token = jwt.sign(
-            {
-              email: user[0].email,
-              username: user[0].username,
-              role: user[0].role,
-              id: user[0]._id,
-              image: user[0].image,
-            },
-            process.env.JWT_KEY,
-            {
-              expiresIn: "72h",
-            }
-          );
-          return res.status(200).json({
-            message: "Auth successfuly",
-            token: token,
-          });
-        }
-        res.status(401).json({
-          message: "Auth failed 3",
-        });
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({
-        error: "ERROR in API users_login",
-      });
+// Login
+exports.users_login = async (req, res, next) => {
+  try {
+    // Extragem datele din corpul cererii
+    const { email, password } = req.body;
+
+    // Căutăm utilizatorul în baza de date după adresa de email
+    const user = await User.findOne({ email });
+
+    // Verificăm dacă utilizatorul există și parola este corectă
+    if (!user || user.password !== password) {
+      return res
+        .status(401)
+        .json({ message: "Adresa de email sau parola incorectă." });
+    }
+
+    // Generăm un token de autentificare pentru utilizatorul logat
+    const token = jwt.sign({ userId: user._id }, "secret_key", {
+      expiresIn: "7d",
+    }); // Parametrul "secret_key" este cheia secretă pentru semnarea token-ului
+
+    // Returnăm răspunsul cu utilizatorul logat și token-ul de autentificare
+    return res.status(200).json({
+      message: "Autentificare reușită.",
+      user,
+      token,
     });
+  } catch (err) {
+    // Gestionăm erorile și le returnăm ca răspuns de eroare
+    console.error(err);
+    return res
+      .status(500)
+      .json({ message: "A apărut o eroare la autentificare.", error: err });
+  }
 };
 
 // Register
