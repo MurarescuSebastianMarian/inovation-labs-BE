@@ -7,6 +7,7 @@ const cors = require("cors");
 
 const usersRoutes = require("./api/routes/users");
 const groupsRoutes = require("./api/routes/groups");
+const eventsRoutes = require("./api/routes/events");
 const mentorsRoutes = require("./api/routes/mentors");
 
 const DB =
@@ -32,6 +33,7 @@ app.use(cors());
 
 app.use("/users", usersRoutes);
 app.use("/groups", groupsRoutes);
+app.use("/events", eventsRoutes);
 app.use("/mentors", mentorsRoutes);
 
 app.use((req, res, next) => {
